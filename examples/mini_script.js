@@ -22,13 +22,27 @@
 
 var Lexer = require('lexer').Lexer;
 
+var ESCAPES = {b: '\b', f: '\f', n: '\n', r: '\r', t: '\t'};
 var RULES = [
     [/(?:"((?:\\.|[^"])*)"|'((?:\\.|[^'])*)')/, 'STRING'
     , function (token) {
         token.value = (token.match[1] || token.match[2] || '')
-            .replace(new RegExp("\\\\\"", 'g'), "\"")
-            .replace(new RegExp("\\\\\'", 'g'), "\'")
-            .replace(new RegExp("\\\\\\\\", 'g'), "\\");
+            .replace(/\\(?:u([0-9a-fA-F]{4})|x([0-9a-fA-F]{2})|([0-3][0-7]{0,2}|[0-7]{1,2})|(.))/g, function () {
+              var match = arguments;
+              var c;
+              if (c = match[1] || match[2]) {
+                return String.fromCharCode(parseInt(c, 16));
+              } else if (c = match[3]) {
+                return String.fromCharCode(parseInt(c, 8));
+              } else {
+                c = match[4];
+                if (Object.prototype.hasOwnProperty.call(ESCAPES, c)) {
+                  return ESCAPES[c];
+                } else {
+                  return c;
+                }
+              }
+            });
       }]
   , [/([_a-zA-Z][_a-zA-Z0-9]*)\(/, 'FUNC'
     , function (token) {

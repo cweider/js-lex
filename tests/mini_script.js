@@ -39,7 +39,11 @@ var expectException = function (func) {
 assertObjectsEqual((new MiniScript('aMethod()'))._statements, [['aMethod', []]]);
 assertObjectsEqual((new MiniScript('aMethod("")'))._statements, [['aMethod', ['']]]);
 assertObjectsEqual((new MiniScript('aMethod("aMethod(\\"\\")")'))._statements, [['aMethod', ['aMethod("")']]]);
-assertObjectsEqual((new MiniScript('aMethod("aMethod(\\" \\ \\")")'))._statements, [['aMethod', ['aMethod(" \\ ")']]]);
+assertObjectsEqual((new MiniScript('aMethod("aMethod(\\" \\ \\")")'))._statements, [['aMethod', ['aMethod("  ")']]]);
+assertObjectsEqual((new MiniScript('aMethod("\\b\\f\\n\\r\\t")'))._statements, [['aMethod', ['\b\f\n\r\t']]]);
+assertObjectsEqual((new MiniScript('aMethod("\\u2026\\u202\\uz\u2026")'))._statements, [['aMethod', ['\u2026\u202\uz\u2026']]]);
+assertObjectsEqual((new MiniScript('aMethod("\\xF\\xFF\\x0\\x00\\xz")'))._statements, [['aMethod', ['\xF\xFF\x0\x00\xz']]]);
+assertObjectsEqual((new MiniScript('aMethod("\\0\\3\\4\\37\\38\\377\\378")'))._statements, [['aMethod', ['\0\3\4\37\38\377\378']]]);
 assertObjectsEqual((new MiniScript('aMethod1("aMethod(1);"); aMethod2("aMethod(2);")'))._statements,
     [['aMethod1', ['aMethod(1);']],['aMethod2', ['aMethod(2);']]]
     );
