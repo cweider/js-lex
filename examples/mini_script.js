@@ -22,36 +22,36 @@
 
 var Lexer = require('lexer').Lexer;
 
+var RULES = [
+    [/(?:"((?:\\.|[^"])*)"|'((?:\\.|[^'])*)')/, 'STRING'
+    , function (token) {
+        token.value = (token.match[1] || token.match[2] || '')
+            .replace(new RegExp("\\\\\"", 'g'), "\"")
+            .replace(new RegExp("\\\\\'", 'g'), "\'")
+            .replace(new RegExp("\\\\\\\\", 'g'), "\\");
+      }]
+  , [/([_a-zA-Z][_a-zA-Z0-9]*)\(/, 'FUNC'
+    , function (token) {
+        token.value = token.match[1];
+      }]
+  , [/[+-]?(?:((?:[1-9][0-9]*|0?)\.[0-9]+|NaN|Infinity)|(0x[0-9a-fA-F]+|[0-9]+))/, 'NUM'
+    , function (token) {
+        if (token.match[1]) {
+          token.value = parseFloat(token.match[0]);
+        } else {
+          token.value = parseInt(token.match[0]);
+        }
+      }]
+  , [/\)/, 'RPAREN']
+  , [/;/, 'SEMI']
+  , [/,/, 'COMMA']
+  , [/\s+/, null]
+  ];
+
 var lexer = undefined;
 var lex = function (text) {
   if (!lexer) {
-    var rules = [
-        [/(?:"((?:\\.|[^"])*)"|'((?:\\.|[^'])*)')/, 'STRING'
-        , function (token) {
-            token.value = (token.match[1] || token.match[2] || '')
-                .replace(new RegExp("\\\\\"", 'g'), "\"")
-                .replace(new RegExp("\\\\\'", 'g'), "\'")
-                .replace(new RegExp("\\\\\\\\", 'g'), "\\");
-          }]
-      , [/([_a-zA-Z][_a-zA-Z0-9]*)\(/, 'FUNC'
-        , function (token) {
-            token.value = token.match[1];
-          }]
-      , [/[+-]?(?:((?:[1-9][0-9]*|0?)\.[0-9]+|NaN|Infinity)|(0x[0-9a-fA-F]+|[0-9]+))/, 'NUM'
-        , function (token) {
-            if (token.match[1]) {
-              token.value = parseFloat(token.match[0]);
-            } else {
-              token.value = parseInt(token.match[0]);
-            }
-          }]
-      , [/\)/, 'RPAREN']
-      , [/;/, 'SEMI']
-      , [/,/, 'COMMA']
-      , [/\s+/, null]
-      ];
-
-    lexer = new Lexer(rules);
+    lexer = new Lexer(RULES);
   }
 
   return lexer.lex(text);
