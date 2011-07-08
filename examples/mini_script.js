@@ -49,15 +49,15 @@ var RULES = [
   ];
 
 var lexer = undefined;
-var lex = function (text) {
+function lex(text) {
   if (!lexer) {
     lexer = new Lexer(RULES);
   }
 
   return lexer.lex(text);
-};
+}
 
-var generate = function (tokens) {
+function generate(tokens) {
   // A statement is made of FUNC (STRING (COMMA STRING)*)? RPAREN SEMICOLON
   var statements = [];
 
@@ -100,7 +100,7 @@ var generate = function (tokens) {
     throw new Error("ParseError: Unexpected token, expected EOF.");
   }
   return statements;
-};
+}
 
 var MiniScript = function (code) {
   this._code = code;
@@ -108,7 +108,7 @@ var MiniScript = function (code) {
   this._statements = generate(this._tokens);
 };
 MiniScript.prototype = new function () {
-  this.runInContext = function (sandbox) {
+  function runInContext(sandbox) {
     var statements = this._statements;
     for (var i = 0, ii = statements.length; i < ii; i++) {
       var statement = statements[i];
@@ -117,7 +117,8 @@ MiniScript.prototype = new function () {
         method.apply(this, statement[1]);
       }
     }
-  };
+  }
+  this.runInContext = runInContext;
 }();
 MiniScript.runInContext = function (code, sandbox) {
   var script = new this(code);
