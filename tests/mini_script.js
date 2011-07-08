@@ -59,8 +59,8 @@ assertObjectsEqual((new MiniScript('aMethod(\"aMethod(1)\",\"aMethod(2)\")'))._s
 assertObjectsEqual((new MiniScript('_aMethod(\"aMethod(1)\",\"aMethod(2)\")'))._statements,
     [['_aMethod', ['aMethod(1)','aMethod(2)']]]
     );
-assertObjectsEqual((new MiniScript('aMethod(1,+1,-1,1.001,.999,0xFF,0022,+Infinity,-Infinity,NaN)'))._statements,
-    [['aMethod', [1,+1,-1,1.001,.999,0xFF,0022,+Infinity,-Infinity,NaN]]]
+assertObjectsEqual((new MiniScript('aMethod(1,+1,-1,1.001,.999,0xFF,0022,+Infinity,-Infinity,NaN,10e-10)'))._statements,
+    [['aMethod', [1,+1,-1,1.001,.999,0xFF,0022,+Infinity,-Infinity,NaN,10e-10]]]
     );
 expectException(function () {new MiniScript()})
 expectException(function () {new MiniScript('aMethod(\u2026)')})

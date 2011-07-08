@@ -48,12 +48,12 @@ var RULES = [
     , function (token) {
         token.value = token.match[1];
       }]
-  , [/[+-]?(?:((?:[1-9][0-9]*|0?)\.[0-9]+|NaN|Infinity)|(0x[0-9a-fA-F]+|[0-9]+))/, 'NUM'
+  , [/[+-]?(?:(0x[0-9a-fA-F]+|0[0-7]+)|((?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?|NaN|Infinity))/, 'NUM'
     , function (token) {
         if (token.match[1]) {
-          token.value = parseFloat(token.match[0]);
-        } else {
           token.value = parseInt(token.match[0]);
+        } else {
+          token.value = parseFloat(token.match[0]);
         }
       }]
   , [/\)/, 'RPAREN']
