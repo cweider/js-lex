@@ -10,20 +10,33 @@ For anyone familiar with lex, flex, and friends the syntax is familiar enough. T
         [/(?:"((?:\\.|[^"])*)"|'((?:\\.|[^'])*)')/, 'STRING'
         , function (token) {
             token.value = (token.match[1] || token.match[2] || '')
-                .replace(new RegExp("\\\\\"", 'g'), "\"")
-                .replace(new RegExp("\\\\\'", 'g'), "\'")
-                .replace(new RegExp("\\\\\\\\", 'g'), "\\");
+                .replace(/\\(?:u([0-9a-fA-F]{4})|x([0-9a-fA-F]{2})|([0-3][0-7]{0,2}|[0-7]{1,2})|(.))/g, function () {
+                  var match = arguments;
+                  var c;
+                  if (c = match[1] || match[2]) {
+                    return String.fromCharCode(parseInt(c, 16));
+                  } else if (c = match[3]) {
+                    return String.fromCharCode(parseInt(c, 8));
+                  } else {
+                    c = match[4];
+                    if (Object.prototype.hasOwnProperty.call(ESCAPES, c)) {
+                      return ESCAPES[c];
+                    } else {
+                      return c;
+                    }
+                  }
+                });
           }]
       , [/([_a-zA-Z][_a-zA-Z0-9]*)\(/, 'FUNC'
         , function (token) {
             token.value = token.match[1];
           }]
-      , [/[+-]?(?:((?:[1-9][0-9]*|0?)\.[0-9]+|NaN|Infinity)|(0x[0-9a-fA-F]+|[0-9]+))/, 'NUM'
+      , [/[+-]?(?:(0x[0-9a-fA-F]+|0[0-7]+)|((?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?|NaN|Infinity))/, 'NUM'
         , function (token) {
             if (token.match[1]) {
-              token.value = parseFloat(token.match[0]);
-            } else {
               token.value = parseInt(token.match[0]);
+            } else {
+              token.value = parseFloat(token.match[0]);
             }
           }]
       , [/\)/, 'RPAREN']
