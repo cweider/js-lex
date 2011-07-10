@@ -129,6 +129,9 @@ MiniScript.prototype = new function () {
       if (Object.prototype.hasOwnProperty.call(sandbox, statement[0])) {
         var method = sandbox[statement[0]];
         method.apply(this, statement[1]);
+      } else {
+        throw new Error(
+            "Method " + JSON.stringify(statement[0] + "is not defined."));
       }
     }
   }
