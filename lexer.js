@@ -124,8 +124,8 @@ Lexer.prototype = new function () {
       var rules = this._rules;
       var rule = rules[r];
       while (!tokenMatch[i]) {
-          i += rule[3];
-          rule = rules[++r];
+        i += rule[3];
+        rule = rules[++r];
       }
       token.type = rule[1];
       token.match = tokenMatch.slice(i, i+rule[3]);
