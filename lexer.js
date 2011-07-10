@@ -49,8 +49,8 @@ var Lexer = function (rules) {
       if ((typeof type != 'string' || type.length == 0)
         && type !== null) {
         throw new Error("Expected String or null instead found \""
-          + String(type).replace("\\", "\\\\").replace("\"", "\\\"")
-          + "\" for type of rule at index " + i + ".");
+          + JSON.stringify(String(type))
+          + " for type of rule at index " + i + ".");
       }
       var action = rule[2];
       if (action !== undefined
