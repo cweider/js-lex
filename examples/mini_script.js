@@ -93,9 +93,9 @@ function generate(tokens) {
       }
 
       if (j >= ii || token_.type != 'RPAREN') {
-        throw new Error("ParseError: Expected ')' instead found \""
-          + tokens_.match[0].replace("\\", "\\\\").replace("\"", "\\\"")
-          + "\".");
+        throw new Error(
+            "Expected ')' instead found " + JSON.stringify(tokens_.match[0])
+          + ".");
       }
       statements.push([token.value, arguments]);
       i = j + 1;
@@ -104,14 +104,13 @@ function generate(tokens) {
       i++;
       continue;
     } else {
-      throw new Error("ParseError: Unexpected token \""
-        + token.match[0].replace("\\", "\\\\").replace("\"", "\\\"")
-        + "\".");
+      throw new Error(
+          "Unexpected token " + JSON.stringify(token.match[0]) + ".");
     }
   }
 
   if (i != ii) {
-    throw new Error("ParseError: Unexpected token, expected EOF.");
+    throw new Error("Unexpected token, expected EOF.");
   }
   return statements;
 }
