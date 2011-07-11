@@ -9,8 +9,11 @@ var assertObjectsEqual = function (one, two) {
 
     if (typeof one[key] == 'object') {
       assertObjectsEqual(one[key], two[key]);
-    } else if (isNaN(one[key])) {
-      if (!isNaN(two[key])) {
+    } else if (typeof one[key] == 'number') {
+      if (typeof two[key] != 'number' ||
+          isNaN(one[key]) != isNaN(two[key]) ||
+          (!isNaN(one[key]) && one[key] != two[key])
+          ) {
         throw new Error("Not equal!");
       }
     } else {
