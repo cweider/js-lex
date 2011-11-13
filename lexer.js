@@ -34,16 +34,18 @@ var Lexer = function (rules) {
         throw new Error("Invalid rule at index " + i + ".");
       }
       var expression = rule[0];
-      if (!(expression instanceof RegExp)) {
-        throw new Error("Expression must be an instance of RegExp "
-          + "for rule at index " + i + ".");
+      if (!((expression instanceof RegExp)
+          || (expression instanceof String))) {
+        throw new Error("Expression must be an instance of RegExp or String"
+          + " for rule at index " + i + ".");
       }
       // Prevent side-effects by taking string copy of RegExp. This also has
       // the benefit of stripping all modifiers from the RegExp.
-      expression = expression.toString();
-      var j = expression.length-1;
-      while (expression.charAt(j) != '/') { j--; } // Trim modifiers.
-      expression = expression.slice(1, j);
+      if (expression.source) {
+        expression = expression.source;
+      } else {
+        expression = expression.replace(/[-*+?.,^$|#\[\]{}()\\]/g, '\\$1');
+      }
 
       var type = rule[1];
       if ((typeof type != 'string' || type.length == 0)
