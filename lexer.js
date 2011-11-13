@@ -48,7 +48,7 @@ var Lexer = function (rules) {
       var type = rule[1];
       if ((typeof type != 'string' || type.length == 0)
         && type !== null) {
-        throw new Error("Expected String or null instead found \""
+        throw new Error("Expected String or null instead found "
           + JSON.stringify(String(type))
           + " for type of rule at index " + i + ".");
       }
@@ -105,8 +105,9 @@ Lexer.prototype = new function () {
     while (tokenMatch = tokenRegExp.exec(text)) {
       // Throw if character is skipped.
       if (tokenMatch.index != index) {
-        throw new Error("Unexpected character found '"
-          + text.charAt(index) + "' at index " + index + ".");
+        throw new Error("Unexpected character found "
+          + JSON.stringify(String(text.charAt(index))) + " at index "
+          + index + ".");
       }
       index += tokenMatch[0].length;
 
@@ -148,8 +149,9 @@ Lexer.prototype = new function () {
 
     // Throw if all input isn't consumed.
     if (text.length != index) {
-      throw new Error("Unexpected character found' "
-        + text.charAt(index) + "' at index " + index + ".");
+      throw new Error("Unexpected character found "
+        + JSON.stringify(String(text.charAt(index))) + " at index "
+        + index + ".");
     }
 
     return tokens;
