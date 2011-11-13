@@ -48,7 +48,7 @@ For anyone familiar with lex, flex, and friends the syntax is familiar enough. T
     lexer = new Lexer(rules);
 
 ## Notes ##
-At the moment, `Lexer` does not support macros (the definitions section for users of lex). There are also no guards on the regular expressions preventing the use of non-regular constructs (e.g. back references) that are exposed by the language; the generated lexer will not work properly of those are used.
+At the moment, `Lexer` does not support macros (the definitions section for users of lex).
 
 ## License ##
 Released under zlib

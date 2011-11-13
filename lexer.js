@@ -69,22 +69,34 @@ Lexer.prototype = new function () {
     if (!this._tokenRegExp) {
       var tokenExpressions = [];
       var rules = this._rules;
+      var captureCount = 0;
       for (var i = 0, ii = rules.length; i < ii; i++) {
         var rule = rules[i];
         var expression = rule[0];
 
         // How many captures does this expression have?
-        var captureCount = 1;
-        for (var j = 0, jj = expression.length; j < jj; j++) {
-          var char = expression.charAt(j);
-          if (char == '\\') {
-            j++;
-          } else if (char == '(' && expression.charAt(j+1) != '?') {
-            captureCount++;
-            j += 2;
+        var CAPTURE_EXP = /\\.|\[(?:\\.|[^\]])*\]|(\((?!\?[!:=]))|./g;
+        captures = expression.replace(CAPTURE_EXP, function (match, p) {
+          return p ? '.' : '';
+        }).length;
+        rule[3] = captures + 1;
+
+        // Increment backreferences.
+        var BACK_REF_EXP = /\\\D|\[(?:\\.|[^\]])*\]|\\(\d+)|./g;
+        expression = expression.replace(BACK_REF_EXP, function (match, d) {
+          if (d) {
+            var n = parseInt(d, 10);
+            if (n > 0 && n <= captures) {
+              return '\\' + (n + captureCount + 1);
+            } else {
+              return parseInt(d, 8); // Assume this was an escape sequence?
+            }
+          } else {
+            return match;
           }
-        }
-        rule[3] = captureCount;
+        });
+
+        captureCount += captures + 1;
 
         tokenExpressions.push(expression);
       }
