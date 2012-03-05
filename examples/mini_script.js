@@ -44,6 +44,10 @@ var RULES = [
               }
             });
       }]
+  , [/null/, 'NULL'
+    , function (token) {
+        token.value = null;
+      }]
   , [/true|false/, 'BOOL'
     , function (token) {
         token.value = token.match[0] == 'true';
@@ -90,6 +94,7 @@ function generate(tokens) {
       while (j < ii
             && (token_.type == 'STRING'
                 || token_.type == 'NUM'
+                || token_.type == 'NULL'
                 || token_.type == 'BOOL')) {
         arguments.push(token_.value);
         token_ = tokens[++j];

@@ -62,6 +62,9 @@ assertObjectsEqual((new MiniScript('_aMethod(\"aMethod(1)\",\"aMethod(2)\")'))._
 assertObjectsEqual((new MiniScript('aMethod(1,+1,-1,1.001,.999,0xFF,0022,+Infinity,-Infinity,NaN,10e-10)'))._statements,
     [['aMethod', [1,+1,-1,1.001,.999,0xFF,0022,+Infinity,-Infinity,NaN,10e-10]]]
     );
+assertObjectsEqual((new MiniScript('aMethod(null)'))._statements,
+    [['aMethod', [null]]]
+    );
 assertObjectsEqual((new MiniScript('aMethod(true, false)'))._statements,
     [['aMethod', [true, false]]]
     );
