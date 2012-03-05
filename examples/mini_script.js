@@ -142,7 +142,7 @@ MiniScript.prototype = new function () {
         method.apply(sandbox, statement[1]);
       } else {
         throw new Error(
-            "Method " + JSON.stringify(statement[0] + "is not defined."));
+            "Method " + JSON.stringify(statement[0]) + " is not defined.");
       }
     }
   }
