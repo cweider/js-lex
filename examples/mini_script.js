@@ -44,6 +44,10 @@ var RULES = [
               }
             });
       }]
+  , [/true|false/, 'BOOL'
+    , function (token) {
+        token.value = token.match[0] == 'true';
+      }]
   , [/([_a-zA-Z][_a-zA-Z0-9]*)\(/, 'FUNC'
     , function (token) {
         token.value = token.match[1];
@@ -83,7 +87,10 @@ function generate(tokens) {
       var j = i + 1;
       var arguments = [];
       var token_ = tokens[j];
-      while (j < ii && (token_.type == 'STRING' || token_.type == 'NUM')) {
+      while (j < ii
+            && (token_.type == 'STRING'
+                || token_.type == 'NUM'
+                || token_.type == 'BOOL')) {
         arguments.push(token_.value);
         token_ = tokens[++j];
         if (j < ii && (token_.type == 'RPAREN' || token_.type != 'COMMA')) {
